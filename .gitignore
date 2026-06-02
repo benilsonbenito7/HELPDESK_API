@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+
+# Dados de volumes locais (para não guardar bases de dados no Git)
+.docker/
+data/
+db_data/
+mysql_data/
+postgres_data/
+
+# Ficheiros de registo (Logs) do Docker e dos containers
+*.log
+logs/
+
+# Ficheiros temporários e de estado do Docker Compose
+.docker-compose.unrequested/
