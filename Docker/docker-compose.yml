@@ -1,0 +1,34 @@
+services:
+  backend:
+    build: .
+    container_name: helpbackend
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - helpdesk_net
+
+  db:
+    image: postgres:13
+    container_name: helpdb
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgre_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - helpdesk_net
+
+volumes:
+  postgre_data:
+
+networks:
+  helpdesk_net:
+    driver: bridge
