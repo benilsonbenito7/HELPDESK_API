@@ -1,6 +1,6 @@
 services:
   backend:
-    build: .
+    build: ./Docker
     container_name: helpbackend
     volumes:
       - .:/app
