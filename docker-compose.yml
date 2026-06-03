@@ -9,14 +9,15 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
     networks:
       - helpdesk_net
 
   db:
-    image: postgres:13
+    image: postgres:15
     container_name: helpdb
     restart: always
     env_file:
@@ -27,6 +28,12 @@ services:
       - "5433:5432"
     networks:
       - helpdesk_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgre_data:

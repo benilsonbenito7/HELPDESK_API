@@ -32,3 +32,5 @@ fclean:
 
 prune: fclean
 	docker system prune -a --volumes -f
+
+re: fclean up
