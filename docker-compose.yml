@@ -1,9 +1,11 @@
 services:
   backend:
-    build: ./Docker
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile
     container_name: helpbackend
     volumes:
-      - .:/app
+      - ./Backend:/app
     env_file:
       - .env
     depends_on:
