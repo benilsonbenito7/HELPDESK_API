@@ -15,3 +15,41 @@ logs/
 
 # Ficheiros temporários e de estado do Docker Compose
 .docker-compose.unrequested/
+
+# Arquivos Python ignorados
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.installed.cfg
+*.egg
+*.manifest
+*.spec
+.Python
+env/
+venv/
+ENV/
+venv.bak/
+build/
+dist/
+*.log
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.ipynb_checkpoints
+.DS_Store
+*~
+*.swp
+*.swo
+*.tmp
