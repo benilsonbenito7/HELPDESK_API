@@ -26,7 +26,8 @@ class TicketService:
                 "bug",
                 "crítico",
                 "indisponível",
-                "não funciona"
+                "não funciona",
+                "logar"
         ]
         data["status"] = Ticket.Status.OPEN
         data["priority"] = Ticket.Priority.MEDIUM
@@ -56,7 +57,7 @@ class TicketService:
             ticket = ticket.filter(status=status)
             
         if search:
-            ticket = ticket.filter(Q(title__icontains=search) | Q(description__icontains=search) | Q(name__icontains=search))
+            ticket = ticket.filter(Q(title__icontains=search) | Q(description__icontains=search))
         
         if priority:
             ticket = ticket.filter(priority=priority.upper())
@@ -79,7 +80,9 @@ class TicketService:
     def update_ticket(payload, reference, user):
         ticket = get_object_or_404(Ticket, reference=reference)
 
-        if not user.groups.filter(name__in=["admin", "support"]).exists():
+        is_support_or_admin = user.groups.filter(name__in=["admin", "support"]).exists()
+        
+        if not is_support_or_admin:
             raise HttpError(403,"Not allowed")
 
         ticket.status = payload.status
@@ -92,20 +95,33 @@ class TicketServiceComments:
     @staticmethod
     def post_comment(reference: str, payload, user):
         ticket = get_object_or_404(Ticket, reference=reference)
-        if not user.groups.filter(name__in=["admin", "support"]).exists() and ticket.user != user:
-            raise HttpError(403,"Not allowed")
 
+        is_support_or_admin = user.groups.filter(name__in=["admin", "support"]).exists()
+        
+        if is_support_or_admin or ticket.user == user:
+            pass
+        else:
+            raise HttpError(403,"Not allowed")
+        
         comment = TicketComment.objects.create(
             ticket = ticket,
-            author = payload.author,
+            author = user.username,
             message = payload.message
         )
         return comment
     
     @staticmethod
-    def list_comment(reference: str = None):
+    def list_comment(reference: str, user):
         ticket = get_object_or_404(Ticket, reference=reference)
-        return ticket.comments.all()
+
+        is_support_or_admin = user.groups.filter(name__in=["admin", "support"]).exists()
+        
+        if is_support_or_admin:
+            return ticket.comments.all().order_by("-created_at")
+        if ticket.user == user:
+            return ticket.comments.all().order_by("-created_at")
+        
+        raise HttpError(403,"Not allowed")
 
 
 class RegisterServices:

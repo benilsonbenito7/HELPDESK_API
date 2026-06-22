@@ -4,7 +4,6 @@ from ninja import Schema, Field
 from pydantic import EmailStr
 
 class TicketSchemaIn(Schema):
-    email: EmailStr
     title: str
     description: str
 
@@ -39,7 +38,7 @@ class TicketCommentOut(ModelSchema):
 class TicketCommentIn(ModelSchema):
     class Meta:
         model = TicketComment
-        fields = ["author", "message"]
+        fields = ["message"]
 
 #Schemas USER ------>
 
